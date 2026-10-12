@@ -1,0 +1,886 @@
+<!doctype html>
+<!--
+  Texts marked with data-i18n="key" / data-i18n-attr="attr:key" come from
+  content.js (`ui`) in Czech and English. The Czech text below is only the
+  fallback without JavaScript – edit texts in content.js.
+-->
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Taskhub</title>
+    <meta
+      name="description"
+      id="meta-description"
+      content="Taskhub – tasky, wiki a výkazy času pro tým, který pracuje pro zákazníky. Zákazníci se připojí jako hosté."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&subset=latin-ext&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      // Apply a saved theme and the language before first paint (no flash).
+      // Language: ?lang= in the URL > saved choice > browser language (en*) > Czech.
+      // Safe if storage is blocked.
+      (function () {
+        var d = document.documentElement;
+        try {
+          var t = localStorage.getItem("taskhub-site-theme");
+          if (t === "light" || t === "dark") d.dataset.theme = t;
+        } catch (e) {}
+        var lang = null;
+        try {
+          var q = new URLSearchParams(location.search).get("lang");
+          if (q === "cs" || q === "en") lang = q;
+        } catch (e) {}
+        if (!lang) {
+          try {
+            var s = localStorage.getItem("taskhub-site-lang");
+            if (s === "cs" || s === "en") lang = s;
+          } catch (e) {}
+        }
+        if (!lang) lang = /^en\b/i.test(navigator.language || "") ? "en" : "cs";
+        d.lang = lang;
+        window.TASKHUB_LANG = lang;
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+          d.classList.add("motion");
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main" data-i18n="skip">Přeskočit na obsah</a>
+
+    <header class="topbar" id="topbar">
+      <div class="wrap topbar-inner">
+        <a
+          class="brand"
+          href="#top"
+          aria-label="Taskhub – na začátek"
+          data-i18n-attr="aria-label:brand.aria"
+        >
+          <span class="logo" aria-hidden="true">T</span><span>Taskhub</span>
+        </a>
+        <nav class="topnav" aria-label="Sekce stránky" data-i18n-attr="aria-label:nav.aria">
+          <a href="#ukazka" data-i18n="nav.demo">Ukázka</a>
+          <a href="#funkce" data-i18n="nav.features">Co umí</a>
+          <a href="#screenshoty" data-i18n="nav.screens">Screenshoty</a>
+          <a href="#roadmapa" data-i18n="nav.roadmap">Roadmapa</a>
+          <a href="#novinky" data-i18n="nav.news">Novinky</a>
+          <a href="#instalace" data-i18n="nav.install">Instalace</a>
+        </nav>
+        <div
+          class="lang-switch"
+          id="lang-switch"
+          role="group"
+          aria-label="Jazyk webu"
+          data-i18n-attr="aria-label:lang.aria"
+        >
+          <a href="?lang=cs" data-lang="cs" hreflang="cs" lang="cs" aria-current="true"
+            >CS<span class="sr-only"> – Čeština</span></a
+          ><a href="?lang=en" data-lang="en" hreflang="en" lang="en"
+            >EN<span class="sr-only"> – English</span></a
+          >
+        </div>
+        <button
+          type="button"
+          class="theme-toggle"
+          id="theme-toggle"
+          aria-label="Přepnout na tmavý režim"
+        >
+          <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path
+              d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+            />
+          </svg>
+          <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+          </svg>
+        </button>
+      </div>
+      <div class="scroll-progress" aria-hidden="true"><span id="scroll-progress"></span></div>
+    </header>
+
+    <main id="main">
+      <!-- ================= Hero ================= -->
+      <section class="hero" id="top" aria-labelledby="hero-h">
+        <div class="hero-bg" aria-hidden="true">
+          <i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i>
+          <span class="beam"></span>
+          <span class="dots"></span>
+          <span class="spot" id="hero-spot"></span>
+        </div>
+
+        <div class="wrap hero-grid">
+          <div class="hero-text">
+            <a class="news-pill" id="news-pill" href="#novinky">
+              <span class="np-tag" data-i18n="hero.pillTag">Novinka</span>
+              <span class="np-rot" id="news-pill-text" data-i18n="hero.pillText">Co je nového</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+            </a>
+
+            <h1 id="hero-h" class="hero-h">
+              <span class="sr-only" data-i18n="hero.srTitle"
+                >Taskhub: jedno místo pro tasky, wiki, výkazy času a klienty</span
+              >
+              <span class="hl" aria-hidden="true" data-i18n="hero.line1">Jedno místo</span>
+              <span class="hl" aria-hidden="true"
+                ><span data-i18n="hero.for">pro</span>
+                <span
+                  class="rot"
+                  id="rotator"
+                  data-words="tasky|wiki|výkazy času|klienty"
+                  data-i18n-attr="data-words:hero.words"
+                  ><span class="w grad" data-i18n="hero.word0">tasky</span></span
+                ></span
+              >
+            </h1>
+
+            <p class="lead" data-i18n="hero.lead">
+              <strong>Taskhub</strong> je pro tým, který pracuje pro zákazníky. Kanban jako v Jiře,
+              dokumentace jako v Confluence, výkazy jako v Tempu. Zákazník se připojí jako host a
+              vidí jen to, co mu ukážete.
+            </p>
+
+            <div class="hero-actions">
+              <a class="btn-primary" href="#instalace"
+                ><span data-i18n="hero.ctaInstall">Jak to rozjet</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg
+              ></a>
+              <a class="btn-ghost" href="#ukazka" data-i18n="hero.ctaDemo">Vyzkoušet board</a>
+            </div>
+
+            <ul class="hero-facts">
+              <li class="status">
+                <span class="dot live" aria-hidden="true"></span
+                ><span id="hero-status" data-i18n="hero.status">Ve vývoji</span>
+              </li>
+              <li data-i18n="hero.fact1">Vlastní instalace</li>
+              <li data-i18n="hero.fact2">Čeština i angličtina</li>
+              <li data-i18n="hero.fact3">Data týmů oddělená</li>
+            </ul>
+          </div>
+
+          <div class="stage" id="stage">
+            <div class="stage-glow" aria-hidden="true"></div>
+            <div class="tilt" id="tilt">
+              <figure class="frame">
+                <div class="frame-bar" aria-hidden="true">
+                  <i></i><i></i><i></i><span>taskhub.app/kytky/board</span>
+                </div>
+                <img
+                  class="th-light"
+                  src="screenshots/board-light.png"
+                  width="1440"
+                  height="900"
+                  alt="Board projektu se sloupci To Do, In Progress, Test a Done a barevnými kartami tasků"
+                  data-i18n-attr="alt:hero.altLight"
+                />
+                <img
+                  class="th-dark"
+                  src="screenshots/board-dark.png"
+                  width="1440"
+                  height="900"
+                  alt="Board projektu se sloupci To Do, In Progress, Test a Done, tmavý režim"
+                  data-i18n-attr="alt:hero.altDark"
+                />
+                <span class="sheen" aria-hidden="true"></span>
+                <figcaption class="sr-only" data-i18n="hero.figcaption">
+                  Board projektu v aplikaci Taskhub
+                </figcaption>
+              </figure>
+
+              <div class="float f-card" aria-hidden="true">
+                <div class="fc-top">
+                  <span class="key">KYT-12</span><span class="chip done">Done</span>
+                </div>
+                <strong data-i18n="hero.floatCard">Napojení na Fakturoid</strong>
+                <div class="fc-bar"><span></span></div>
+              </div>
+              <div class="float f-timer" aria-hidden="true">
+                <span class="ring"></span>
+                <span><b>1h 30m</b><small data-i18n="hero.floatTimer">Timer běží</small></span>
+              </div>
+              <div class="float f-guest" aria-hidden="true">
+                <span class="av">KK</span>
+                <span
+                  ><b data-i18n="hero.floatGuest">Klient jako host</b
+                  ><small data-i18n="hero.floatGuestNote">Vidí jen veřejné tasky</small></span
+                >
+              </div>
+            </div>
+            <p class="stage-note" data-i18n="hero.stageNote">Skutečná obrazovka z aplikace</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= Marquee ================= -->
+      <div
+        class="marquee"
+        aria-label="Co v Taskhubu najdete"
+        data-i18n-attr="aria-label:marquee.aria"
+      >
+        <div class="mq-row">
+          <ul class="mq-track" id="mq-a"></ul>
+        </div>
+        <div class="mq-row rev">
+          <ul class="mq-track" id="mq-b"></ul>
+        </div>
+      </div>
+
+      <!-- ================= Numbers ================= -->
+      <section
+        class="wrap numbers"
+        aria-label="Taskhub v číslech"
+        data-i18n-attr="aria-label:numbers.aria"
+      >
+        <ul class="stats" id="stats" data-stagger></ul>
+      </section>
+
+      <!-- ================= Interactive demo ================= -->
+      <section class="section wrap" id="ukazka" aria-labelledby="ukazka-h">
+        <div class="section-head center">
+          <p class="eyebrow rv" data-i18n="demo.eyebrow">Vyzkoušejte si to</p>
+          <h2 id="ukazka-h" class="split" data-i18n="demo.title">
+            Přetáhněte kartu do <span class="grad">Done</span>
+          </h2>
+          <p class="rv" data-i18n="demo.lead">
+            Takhle se v Taskhubu pracuje s tasky. Kartu chytněte myší, na mobilu podržte prstem,
+            nebo použijte šipku na kartě.
+          </p>
+        </div>
+        <div class="demo rv" data-rv="scale">
+          <div
+            class="demo-board"
+            id="demo-board"
+            role="group"
+            aria-label="Ukázkový board"
+            data-i18n-attr="aria-label:demo.boardAria"
+          ></div>
+          <div class="demo-foot">
+            <span class="demo-score" id="demo-score" aria-hidden="true"></span>
+            <button type="button" class="btn-small" id="demo-reset">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+                <path d="M3 3v5h5" />
+              </svg>
+              <span data-i18n="demo.reset">Začít znovu</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= Co umí (rendered from content.js) ================= -->
+      <section class="section wrap" id="funkce" aria-labelledby="funkce-h">
+        <div class="section-head">
+          <p class="eyebrow rv" data-i18n="features.eyebrow">Co umí</p>
+          <h2 id="funkce-h" class="split" data-i18n="features.title">
+            Všechno, co tým <span class="grad">potřebuje</span>
+          </h2>
+          <p class="rv" data-i18n="features.lead">
+            Funkce podle modulů. Stav odpovídá roadmapě níže.
+          </p>
+        </div>
+        <ul class="modules" id="modules" data-stagger></ul>
+      </section>
+
+      <!-- ================= Showcase (sticky, scroll-driven) ================= -->
+      <section class="section showcase-sec" id="screenshoty" aria-labelledby="screenshoty-h">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="eyebrow rv" data-i18n="screens.eyebrow">Jak to vypadá</p>
+            <h2 id="screenshoty-h" class="split" data-i18n="screens.title">
+              Projděte si <span class="grad">rozhraní</span>
+            </h2>
+            <p class="rv" data-i18n="screens.lead">
+              Skutečné screenshoty z aplikace, u obrazovek z prototypu je to uvedeno.
+            </p>
+          </div>
+          <div class="showcase" id="showcase">
+            <ol class="sc-steps" id="sc-steps"></ol>
+            <div class="sc-sticky" aria-hidden="true">
+              <div class="sc-frame" id="sc-frame">
+                <div class="frame-bar"><i></i><i></i><i></i></div>
+                <div class="sc-imgs" id="sc-imgs"></div>
+              </div>
+              <div class="sc-dots" id="sc-dots"></div>
+            </div>
+          </div>
+
+          <h3 class="gallery-h rv" data-i18n="screens.gallery">Všechny screenshoty</h3>
+          <ul class="gallery" id="gallery" data-stagger></ul>
+        </div>
+      </section>
+
+      <!-- ================= Roadmapa (rendered from content.js) ================= -->
+      <section class="section wrap" id="roadmapa" aria-labelledby="roadmapa-h">
+        <div class="section-head">
+          <p class="eyebrow rv" data-i18n="roadmap.eyebrow">Roadmapa</p>
+          <h2 id="roadmapa-h" class="split" data-i18n="roadmap.title">
+            Kde je <span class="grad">vývoj</span>
+          </h2>
+          <p class="rv" data-i18n="roadmap.lead">Každý milník končí testy a commitem.</p>
+        </div>
+        <div class="rm-layout">
+          <aside
+            class="rm-aside rv"
+            id="rm-aside"
+            aria-label="Souhrn roadmapy"
+            data-i18n-attr="aria-label:roadmap.asideAria"
+          >
+            <p class="rm-pct"><span id="rm-pct">0</span><small>%</small></p>
+            <div class="progress" aria-hidden="true"><span id="roadmap-bar"></span></div>
+            <p class="progress-label" id="roadmap-summary"></p>
+            <dl class="rm-now">
+              <div>
+                <dt data-i18n="roadmap.now">Právě teď</dt>
+                <dd id="rm-now"></dd>
+              </div>
+              <div>
+                <dt data-i18n="roadmap.next">Na řadě</dt>
+                <dd id="rm-next"></dd>
+              </div>
+            </dl>
+          </aside>
+          <div class="roadmap-wrap" id="roadmap-wrap">
+            <div class="rail" aria-hidden="true"><span id="rail-fill"></span></div>
+            <ol class="roadmap" id="roadmap"></ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= Novinky (rendered from content.js) ================= -->
+      <section class="section wrap" id="novinky" aria-labelledby="novinky-h">
+        <div class="news-layout">
+          <div class="news-intro">
+            <p class="eyebrow rv" data-i18n="news.eyebrow">Novinky</p>
+            <h2 id="novinky-h" class="split" data-i18n="news.title">
+              Co je <span class="grad">nového</span>
+            </h2>
+            <p class="rv" data-i18n="news.lead">
+              Co přibylo s každou verzí, nejnovější nahoře. Celý přehled je v souboru
+              <a
+                id="changelog-link"
+                href="https://github.com/mhudakcz/taskhub/blob/main/CHANGELOG.md"
+                ><code>CHANGELOG.md</code></a
+              >
+              v repozitáři.
+            </p>
+            <dl class="news-legend rv" id="news-legend"></dl>
+          </div>
+          <ol class="news" id="news"></ol>
+        </div>
+      </section>
+
+      <!-- ================= Instalace ================= -->
+      <section class="section wrap" id="instalace" aria-labelledby="instalace-h">
+        <div class="section-head">
+          <p class="eyebrow rv" data-i18n="install.eyebrow">Instalace</p>
+          <h2 id="instalace-h" class="split" data-i18n="install.title">
+            Rozjeto za <span class="grad">deset minut</span>
+          </h2>
+          <p class="rv" data-i18n="install.lead">
+            Lokální vývoj, přihlášení, e-maily i nasazení. Repozitář je zatím soukromý.
+          </p>
+        </div>
+
+        <div class="tabs rv" id="install-tabs">
+          <div
+            class="tablist"
+            role="tablist"
+            aria-label="Návody"
+            data-i18n-attr="aria-label:install.tabsAria"
+          >
+            <span class="tab-ind" aria-hidden="true"></span>
+            <button
+              type="button"
+              role="tab"
+              id="tab-local"
+              aria-controls="panel-local"
+              aria-selected="true"
+              data-i18n="install.tabLocal"
+            >
+              Lokální vývoj
+            </button>
+            <button
+              type="button"
+              role="tab"
+              id="tab-google"
+              aria-controls="panel-google"
+              aria-selected="false"
+              tabindex="-1"
+              data-i18n="install.tabGoogle"
+            >
+              Google přihlášení
+            </button>
+            <button
+              type="button"
+              role="tab"
+              id="tab-mail"
+              aria-controls="panel-mail"
+              aria-selected="false"
+              tabindex="-1"
+              data-i18n="install.tabMail"
+            >
+              E-maily
+            </button>
+            <button
+              type="button"
+              role="tab"
+              id="tab-deploy"
+              aria-controls="panel-deploy"
+              aria-selected="false"
+              tabindex="-1"
+              data-i18n="install.tabDeploy"
+            >
+              Nasazení
+            </button>
+            <button
+              type="button"
+              role="tab"
+              id="tab-win"
+              aria-controls="panel-win"
+              aria-selected="false"
+              tabindex="-1"
+              data-i18n="install.tabWin"
+            >
+              Tipy pro Windows
+            </button>
+          </div>
+
+          <div
+            class="panel"
+            role="tabpanel"
+            id="panel-local"
+            aria-labelledby="tab-local"
+            tabindex="0"
+          >
+            <ol class="steps">
+              <li>
+                <h3 data-i18n="install.s1h">Připravte nástroje</h3>
+                <p data-i18n="install.s1p">
+                  Node 24, pnpm, Git a Docker Desktop (lokální Supabase běží v Dockeru). Docker
+                  Desktop musí běžet.
+                </p>
+                <div class="code">
+                  <pre><code>node -v      # v24.x
+pnpm -v
+docker info</code></pre>
+                </div>
+              </li>
+              <li>
+                <h3 data-i18n="install.s2h">Naklonujte repozitář a nainstalujte závislosti</h3>
+                <div class="code">
+                  <pre><code>git clone https://github.com/mhudakcz/taskhub.git
+cd taskhub
+pnpm install</code></pre>
+                </div>
+              </li>
+              <li>
+                <h3 data-i18n="install.s3h">Spusťte lokální Supabase</h3>
+                <p data-i18n="install.s3p">
+                  Na konci výpisu jsou URL a klíče, budete je potřebovat v dalším kroku.
+                </p>
+                <div class="code">
+                  <pre><code>pnpm db:start</code></pre>
+                </div>
+              </li>
+              <li>
+                <h3 data-i18n="install.s4h">Vytvořte <code>.env.local</code></h3>
+                <p data-i18n="install.s4p">
+                  Zkopírujte šablonu a doplňte <code>NEXT_PUBLIC_SUPABASE_URL</code>,
+                  <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> a
+                  <code>SUPABASE_SERVICE_ROLE_KEY</code> z výpisu <code>supabase status</code>.
+                  Soubor se necommituje.
+                </p>
+                <div class="code">
+                  <pre><code>cp .env.example .env.local
+pnpm exec supabase status</code></pre>
+                </div>
+              </li>
+              <li>
+                <h3 data-i18n="install.s5h">Vygenerujte typy databáze</h3>
+                <div class="code">
+                  <pre><code>pnpm db:types</code></pre>
+                </div>
+              </li>
+              <li>
+                <h3 data-i18n="install.s6h">Spusťte aplikaci</h3>
+                <div class="code">
+                  <pre><code>pnpm dev</code></pre>
+                </div>
+                <dl class="urls">
+                  <div>
+                    <dt data-i18n="install.urlApp">Aplikace</dt>
+                    <dd><a href="http://localhost:3000">http://localhost:3000</a></dd>
+                  </div>
+                  <div>
+                    <dt>Supabase Studio</dt>
+                    <dd><a href="http://127.0.0.1:54323">http://127.0.0.1:54323</a></dd>
+                  </div>
+                  <div>
+                    <dt data-i18n="install.urlMailpit">Mailpit (přihlašovací e-maily)</dt>
+                    <dd><a href="http://127.0.0.1:54324">http://127.0.0.1:54324</a></dd>
+                  </div>
+                </dl>
+                <p data-i18n="install.s6p">
+                  Lokální databáze obsahuje demo workspace <code>magexo</code>. Přihlaste se
+                  e-mailem <code>michal@taskhub.test</code> (vlastník),
+                  <code>jana@taskhub.test</code> (admin), <code>petr@taskhub.test</code> (člen) nebo
+                  <code>klient@taskhub.test</code> (host). Odkaz pro přihlášení najdete v Mailpitu.
+                </p>
+              </li>
+              <li>
+                <h3 data-i18n="install.s7h">Spusťte testy</h3>
+                <div class="code">
+                  <pre><code data-i18n="install.s7code">pnpm test        # unit testy
+pnpm db:test     # RLS testy databáze
+pnpm test:e2e    # end-to-end testy v prohlížeči</code></pre>
+                </div>
+              </li>
+            </ol>
+          </div>
+
+          <div
+            class="panel"
+            role="tabpanel"
+            id="panel-google"
+            aria-labelledby="tab-google"
+            tabindex="0"
+          >
+            <div class="howto">
+              <h3 data-i18n="install.googleH">Google přihlášení</h3>
+              <ol>
+                <li data-i18n="install.google1">
+                  V Google Cloud Console založte OAuth client typu „Web application“.
+                </li>
+                <li data-i18n="install.google2">
+                  Jako authorized redirect URI zadejte pro lokální vývoj
+                  <code>http://127.0.0.1:54321/auth/v1/callback</code>. V produkci je to stejná
+                  cesta na URL vašeho Supabase projektu.
+                </li>
+                <li data-i18n="install.google3">
+                  Client ID a secret vložte do <code>.env.local</code> a restartujte Supabase.
+                </li>
+              </ol>
+              <div class="code">
+                <pre><code>SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID=
+SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET=</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="panel"
+            role="tabpanel"
+            id="panel-mail"
+            aria-labelledby="tab-mail"
+            tabindex="0"
+          >
+            <div class="howto">
+              <h3 data-i18n="install.mailH">E-maily</h3>
+              <p data-i18n="install.mailP">
+                Lokálně se přihlašovací e-maily zachytí v Mailpitu, nic se neodesílá. Pozvánky a
+                notifikace posílá Resend: vytvořte API klíč v Resendu a doplňte ho.
+              </p>
+              <div class="code">
+                <pre><code>RESEND_API_KEY=</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="panel"
+            role="tabpanel"
+            id="panel-deploy"
+            aria-labelledby="tab-deploy"
+            tabindex="0"
+          >
+            <p class="panel-lead" data-i18n="install.deployP">
+              Produkce: aplikace na Cloudflare Workers, data v Supabase Cloud, soubory v Cloudflare
+              R2, e-maily přes Resend. Po nastavení nasazuje GitHub Actions každý push do
+              <code>main</code>.
+            </p>
+            <ol class="steps">
+              <li>
+                <h3 data-i18n="install.p1h">Supabase Cloud: databáze a přihlášení</h3>
+                <p data-i18n="install.p1p">
+                  Založte projekt v regionu Frankfurt a nahrajte migrace (demo data se do produkce
+                  nenahrávají). V Authentication nastavte Site URL a Redirect URLs na vaši doménu a
+                  vlastní SMTP přes Resend.
+                </p>
+                <div class="code">
+                  <pre><code>pnpm exec supabase login
+pnpm exec supabase link --project-ref &lt;project-ref&gt;
+pnpm exec supabase db push
+
+# Authentication → URL Configuration
+Site URL:      https://taskhub.example.cz
+Redirect URLs: https://taskhub.example.cz/**
+# Authentication → SMTP: smtp.resend.com, port 465, user "resend", password = Resend API key</code></pre>
+                </div>
+              </li>
+              <li>
+                <h3 data-i18n="install.p2h">Cloudflare R2: přílohy a obrázky</h3>
+                <p data-i18n="install.p2p">
+                  Vytvořte soukromý bucket <code>taskhub</code>, API token s oprávněním Object Read
+                  &amp; Write a CORS pravidlo, aby prohlížeč mohl nahrávat přímo do R2.
+                </p>
+                <div class="code">
+                  <pre><code>[
+  {
+    "AllowedOrigins": ["https://taskhub.example.cz"],
+    "AllowedMethods": ["PUT", "GET"],
+    "AllowedHeaders": ["content-type"],
+    "MaxAgeSeconds": 3600
+  }
+]</code></pre>
+                </div>
+              </li>
+              <li>
+                <h3 data-i18n="install.p3h">Resend: e-maily</h3>
+                <p data-i18n="install.p3p">
+                  Přidejte doménu, do DNS doplňte záznamy SPF a DKIM a vytvořte API klíč. Stejný
+                  klíč slouží jako SMTP heslo pro přihlašovací e-maily Supabase.
+                </p>
+              </li>
+              <li>
+                <h3 data-i18n="install.p4h">Cloudflare Workers: tajné hodnoty</h3>
+                <p data-i18n="install.p4p">
+                  Serverové klíče patří jen na Worker, nikdy do repozitáře. Po prvním nasazení
+                  přidejte vlastní doménu (Settings → Domains &amp; Routes), HTTPS se nastaví samo.
+                </p>
+                <div class="code">
+                  <pre><code>pnpm exec wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+pnpm exec wrangler secret put R2_ACCOUNT_ID
+pnpm exec wrangler secret put R2_ACCESS_KEY_ID
+pnpm exec wrangler secret put R2_SECRET_ACCESS_KEY
+pnpm exec wrangler secret put R2_BUCKET        # taskhub
+pnpm exec wrangler secret put RESEND_API_KEY
+pnpm exec wrangler secret put EMAIL_FROM       # Taskhub &lt;taskhub@example.cz&gt;
+pnpm exec wrangler secret put APP_URL          # https://taskhub.example.cz</code></pre>
+                </div>
+              </li>
+              <li>
+                <h3 data-i18n="install.p5h">GitHub Actions: automatické nasazení</h3>
+                <p data-i18n="install.p5p">
+                  V Settings → Secrets and variables → Actions doplňte hodnoty níže. Každý push do
+                  <code>main</code> pak projde testy, nahraje migrace a nasadí aplikaci i tento web.
+                  Když testy selžou, nic se nenasadí.
+                </p>
+                <div class="code">
+                  <pre><code># Secrets
+CLOUDFLARE_API_TOKEN          # template "Edit Cloudflare Workers" (+ Pages: Edit)
+CLOUDFLARE_ACCOUNT_ID
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+SUPABASE_ACCESS_TOKEN         # for migrations
+SUPABASE_DB_PASSWORD
+
+# Variables
+SUPABASE_PROJECT_REF=&lt;project-ref&gt;
+DEPLOY_ENABLED=true
+SITE_DEPLOY_ENABLED=true</code></pre>
+                </div>
+              </li>
+              <li>
+                <h3 data-i18n="install.p6h">Kontrola po nasazení</h3>
+                <p data-i18n="install.p6p">
+                  Přihlaste se e-mailem, založte workspace, nahrajte přílohu (ověří R2 a CORS) a
+                  zapište čas. Živé logy a návrat na předchozí verzi:
+                </p>
+                <div class="code">
+                  <pre><code>pnpm exec wrangler tail
+pnpm exec wrangler rollback</code></pre>
+                </div>
+              </li>
+              <li>
+                <h3 data-i18n="install.p7h">Provoz: dostupnost a zálohy</h3>
+                <p data-i18n="install.p7p">
+                  Supabase Free uspí projekt po 7 dnech bez aktivity. Cron Workeru proto každé 2
+                  minuty rozesílá notifikace a zároveň „pingne“ databázi. Doporučený monitor (např.
+                  UptimeRobot) hlídá <code>/api/health</code> a workflow
+                  <code>backup.yml</code> ukládá každý týden zálohu do R2.
+                </p>
+                <div class="code">
+                  <pre><code>curl https://taskhub.example.cz/api/health
+# {"ok":true,"db":"ok","ms":42}</code></pre>
+                </div>
+              </li>
+            </ol>
+            <div class="howto alt">
+              <h3 data-i18n="install.altH">Alternativa: vlastní server</h3>
+              <p data-i18n="install.altP">
+                Taskhub nepoužívá nic specifického pro jednoho hostingového poskytovatele, takže
+                běží i jako běžná Node.js aplikace na VPS nebo firemním serveru. Databáze a soubory
+                zůstávají v Supabase a R2 (nebo jiném S3), HTTPS zajistí reverzní proxy, třeba
+                Caddy.
+              </p>
+              <div class="code">
+                <pre><code>pnpm install --frozen-lockfile
+cp .env.example .env.production.local   # fill in all values
+pnpm exec supabase db push
+pnpm build
+pnpm start -p 3000
+
+# /etc/caddy/Caddyfile
+taskhub.example.cz {
+  reverse_proxy localhost:3000
+}</code></pre>
+              </div>
+              <p data-i18n="install.docsP">
+                Podrobný návod krok za krokem je v repozitáři v souboru
+                <code>docs/deployment.md</code>.
+              </p>
+            </div>
+          </div>
+
+          <div class="panel" role="tabpanel" id="panel-win" aria-labelledby="tab-win" tabindex="0">
+            <div class="howto">
+              <h3 data-i18n="install.winH">Tipy pro Windows</h3>
+              <ul>
+                <li data-i18n="install.win1">
+                  Pokud cesta k profilu obsahuje diakritiku, <code>next-intl</code> (přes
+                  <code>@swc/core</code>) neumí načíst nativní binárku. Nasměrujte cache na krátkou
+                  cestu bez diakritiky; složka musí existovat.
+                </li>
+                <li data-i18n="install.win2">
+                  Build přes OpenNext (<code>pnpm cf:build</code>, <code>cf:preview</code>,
+                  <code>cf:deploy</code>) na Windows nativně nefunguje. Spouští se v CI nebo ve WSL.
+                  Podrobnosti jsou v README repozitáře.
+                </li>
+              </ul>
+              <div class="code">
+                <pre><code>SWC_NATIVE_BINDING_CACHE=C:\Users\MICHAL~1\.swc-cache</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= Technologie ================= -->
+      <section class="section wrap" id="technologie" aria-labelledby="technologie-h">
+        <div class="section-head">
+          <p class="eyebrow rv" data-i18n="tech.eyebrow">Technologie</p>
+          <h2 id="technologie-h" class="split" data-i18n="tech.title">
+            Postaveno na <span class="grad">ověřených</span> základech
+          </h2>
+        </div>
+        <dl class="stack" data-stagger>
+          <div>
+            <dt data-i18n="tech.app">Aplikace</dt>
+            <dd>Next.js 16 (App Router), TypeScript, Server Actions</dd>
+          </div>
+          <div>
+            <dt>UI</dt>
+            <dd>Tailwind CSS 4, shadcn/ui, lucide-react, dnd-kit</dd>
+          </div>
+          <div>
+            <dt data-i18n="tech.data">Data a přihlášení</dt>
+            <dd>Supabase: Postgres, Auth, Row Level Security</dd>
+          </div>
+          <div>
+            <dt data-i18n="tech.files">Soubory</dt>
+            <dd data-i18n="tech.filesDd">Cloudflare R2, presigned URL</dd>
+          </div>
+          <div>
+            <dt data-i18n="tech.wiki">Wiki editor</dt>
+            <dd>BlockNote</dd>
+          </div>
+          <div>
+            <dt data-i18n="tech.langs">Jazyky</dt>
+            <dd>next-intl (cs, en)</dd>
+          </div>
+          <div>
+            <dt data-i18n="tech.forms">Formuláře</dt>
+            <dd>Zod, React Hook Form</dd>
+          </div>
+          <div>
+            <dt data-i18n="tech.mail">E-maily</dt>
+            <dd>Resend, React Email</dd>
+          </div>
+          <div>
+            <dt>Hosting</dt>
+            <dd data-i18n="tech.hostingDd">Cloudflare Workers přes OpenNext</dd>
+          </div>
+          <div>
+            <dt data-i18n="tech.tests">Testy a CI</dt>
+            <dd>Vitest, Playwright, GitHub Actions</dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- ================= CTA ================= -->
+      <section class="wrap cta-wrap" aria-labelledby="cta-h">
+        <div class="cta rv" data-rv="scale">
+          <span class="cta-bg" aria-hidden="true"></span>
+          <h2 id="cta-h" data-i18n="cta.title">Taskhub roste každý týden</h2>
+          <p data-i18n="cta.lead">Sledujte novinky, nebo si ho rovnou rozjeďte u sebe.</p>
+          <div class="hero-actions">
+            <a class="btn-light" href="#instalace" data-i18n="cta.install">Jak to rozjet</a>
+            <a class="btn-outline" href="#novinky" data-i18n="cta.news">Co je nového</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-inner">
+        <span
+          ><span data-i18n="footer.updated">Taskhub · aktualizováno</span>
+          <time id="updated" datetime="2026-10-08">8. 10. 2026</time></span
+        >
+        <a id="repo-link" href="https://github.com/mhudakcz/taskhub" data-i18n="footer.repo"
+          >Repozitář na GitHubu</a
+        >
+      </div>
+    </footer>
+
+    <dialog class="lightbox" id="lightbox" aria-labelledby="lb-caption">
+      <figure>
+        <img id="lb-img" alt="" />
+        <figcaption id="lb-caption"></figcaption>
+      </figure>
+      <div class="lb-controls">
+        <button
+          type="button"
+          class="lb-btn"
+          id="lb-prev"
+          aria-label="Předchozí obrázek"
+          data-i18n-attr="aria-label:lb.prev"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6" /></svg>
+        </button>
+        <span id="lb-count" class="lb-count"></span>
+        <button
+          type="button"
+          class="lb-btn"
+          id="lb-next"
+          aria-label="Další obrázek"
+          data-i18n-attr="aria-label:lb.next"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
+        </button>
+        <button
+          type="button"
+          class="lb-btn lb-close"
+          id="lb-close"
+          aria-label="Zavřít"
+          data-i18n-attr="aria-label:lb.close"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" /></svg>
+        </button>
+      </div>
+    </dialog>
+
+    <p class="sr-only" id="live" aria-live="polite"></p>
+
+    <script src="content.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
